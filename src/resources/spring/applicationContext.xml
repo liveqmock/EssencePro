@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 引入spring 的beans,location设置有beans、aop、jdbc、context、mvc、tx -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+   
+   <!-- 引入service配置文件 -->
+   <import resource="applicationContext-service.xml" />
+   
+     <!-- 引入数据库jdbc配置文件 -->  
+    <context:property-placeholder location="classpath:config.properties" />  
+        <!--    目前常用的连接池：C3P0，DBCP,Proxool
+    C3P0:比较耗费资源，效率方面可能要低一点
+    DBCP:在实践中存在bug,在某些情况会产生很多空连接不能释放，Hibernate3.0已经放弃了对其的支持
+    Proxool:负面评价较少，推荐，而且还提供即时监控连接池状态的功能，便于发现连接泄露的情况 -->
+    
+    <!--创建jdbc数据源 -->
+    <!-- 连接池——DBCP   -->
+    <!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  
+        destroy-method="close">  
+        <property name="driverClassName" value="${jdbc.driver}" />  
+        <property name="url" value="${jdbc.url}" />  
+        <property name="username" value="${jdbc.username}" />  
+        <property name="password" value="${jdbc.password}" />  
+    </bean> --> 
+   <!--  连接池——Proxool  -->
+   <!-- 配置说明：
+    alias                           -〉数据库连接别名（程序中需要使用的名称）
+    driver-url                      -〉数据库驱动
+    driver-class                    -〉驱动程序类
+    driver-properties               -〉联机数据库的用户和密码
+    minimum-connection-count        -〉最小连接数量，建议设置0以上，保证第一次连接时间
+    maximum-connection-count        -〉最大连接数量，如果超过最大连接数量则会抛出异常。连接数设置过多，服务器CPU和内存性能消耗很大。
+    simultaneous-build-throttle     -〉同时最大连接数
+    prototype-count                 -〉一次产生连接的数量。例：如果现在prototype-count设置为4个，但是现在已经有2个可以获得的连接，那么将会试图再创建2个连接。但不能超过最大连接数。
+    maximum-active-time             -〉连接最大时间活动 默认5分钟
+    maximum-connection-lifetime     -〉连接最大生命时间 默认4小时  -->
+   <bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property name="driver" value="${jdbc.driver}" />
+		<property name="driverUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		
+		<!-- 测试的SQL执行语句 -->
+        <property name="houseKeepingTestSql" value="${proxool.houseKeepingTestSql}"/>
+        <!-- 最少保持的空闲连接数 （默认2个） -->
+        <property name="prototypeCount" value="${proxool.prototypeCount}"/>
+        <!-- proxool自动侦察各个连接状态的时间间隔(毫秒),侦察到空闲的连接就马上回收,超时的销毁 默认30秒） -->
+        <!-- <property name="houseKeepingSleepTime" value="${proxool.hourseKeepingSleepTime}"/> -->
+        <!-- 最大活动时间(超过此时间线程将被kill,默认为5分钟) -->
+        <!-- <property name="maximumActiveTime" value="${proxool.maximumActiveTime}"/> -->
+        <!-- 连接最长时间(默认为4个小时) -->
+        <!-- <property name="maximumConnectionLifetime" value="${proxool.maximumConnectionLifetime}"/> -->
+        <!-- 最小连接数 （默认2个） -->
+        <property name="minimumConnectionCount" value="${proxool.minimumConnectionCount}"/>
+        <!-- 最大连接数 （默认5个） -->
+        <property name="maximumConnectionCount" value="${proxool.maximumConnectionCount}"/>
+        <!--连接池使用状况统计,参数值为10s,1m,1d -->
+        <!-- <property name="statistics" value="${proxool.statistics}"/> -->
+        <!-- 别名 -->
+        <property name="alias" value="${proxool.alias}"/>
+        <!--同时最大连接数  -->
+        <property name="simultaneousBuildThrottle" value="${proxool.simultaneous-build-throttle}"/>
+		
+	</bean>
+    
+  
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+    <bean id="transactionManager"  
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+  
+    <!-- 创建SqlSessionFactory，同时指定数据源 -->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource" /> 
+        <property name="configLocation" value="classpath:resources/mybatis/config.xml" /> 
+    </bean> 
+    
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+	</bean> 
+      
+    <!-- 可通过注解控制事务 -->  
+    <tx:annotation-driven />  
+  
+    <!-- Mapper接口所在包名，Spring会自动查找其下的Mapper -->  
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+        <property name="basePackage" value="com.mapper" />  
+    </bean>
+    
+    <!-- 加载service 不加载 controller -->
+    <context:component-scan base-package="com.service">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+    <bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<!-- 配置事务属性 -->
+		<property name="transactionAttributes">
+			<props>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="list*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 自动代理 -->
+	<bean id="autoproxy"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<!-- 可以是Service或DAO层（最好是针对业务层*Service） -->
+		<property name="beanNames">
+			<list>
+				<value>*Service</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+</beans>

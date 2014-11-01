@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.model.User" alias="user"/>
+	</typeAliases>
+	
+	<!--  分页拦截器 -->
+	<plugins>
+		<plugin interceptor="com.page.PagePlugin">
+			<property name="dialect" value="db2" />
+			<property name="pageSqlId" value=".*list.*" />
+		</plugin>
+	</plugins>
+	
+	<mappers>
+		<mapper resource="com/mapper/impl/UserMapper.xml" />
+	</mappers>
+</configuration>

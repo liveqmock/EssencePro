@@ -1,0 +1,82 @@
+1、搭建包结构
+   src
+          ——com
+                 ——action
+                 ——dao
+                 ——filter
+                 ——model
+                 ——util
+           
+    WebRoot
+           ——css
+           ——images
+           ——js
+                 ——lib
+                 ——index.js
+           ——WEB-INF
+                 ——view
+                      ——index.jsp
+                      ——login.jsp
+           
+2、建立项目依赖关系、UTF-8，设置Jre和compile时的jdk版本。
+
+3、下载jQuery。把jquery-1.9.1-min.js复制到WebRoot/js/lib下,index.jsp界面引入jquery-1.9.1-min.js即可
+
+4、加入json
+       前台：JSON   引入json2.js即可
+       后台：引入 jackson-annotations、jackson-core、jackson-databind三个包
+                  引入JsonUtil.java文件即可
+                  引入fastjson.jar包
+ 
+ 5、引入基本的util类。
+ 
+ 6、annotation。
+ 
+ 7、搭建框架，引入jar包
+ 
+ 8、listener.
+ 
+ 9、引入日期空间My97DatePicker.复制包到js下，jsp界面引入WdatePicker.js即可。
+ 
+ 框架搭建专题：
+ 
+ 一、设置filter,拦截请求。进行页面跳转。
+ 
+ 二、搭建spring mvc
+ 
+   1、引入jar包。
+   2、配置wxml——applicationContext.xml、context-dispatcher.xml、web.xml
+ 
+三、搭建mybatis
+ 
+   1、进入所有必要的jar包。
+ 
+   2、配置web.xml。applicationContext.xml、generator.xml、jdbc.properties.
+   
+   3、生成entity、mapper.java、mapper.xml文件。
+   
+   4、编写log4j.properties文件，引入日志。
+   
+   5、excel文件导入到数据库中。思路1：利用数据库可视化工具。例如navicat直接导入。思路2：把*.xls保存为csv文件（逗号分隔），再导入。
+              思路3：如果数据要进行业务校验，把excel转换成model。进行保存或更新操作。可以利用poi或jxl。
+             通用方法ExcelTool.transformCollectionByFile().
+   
+ 
+   
+   
+   
+   
+
+ 
+ 
+ 
+ 
+                  
+                  
+                  
+  
+
+   
+   
+   
+   

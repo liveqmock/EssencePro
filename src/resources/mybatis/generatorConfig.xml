@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE generatorConfiguration  
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"  
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<properties resource="config.properties" />
+	<classPathEntry location="WebRoot/WEB-INF/lib/db2jcc.jar" />
+
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="${jdbc.driver}"
+			connectionURL="${jdbc.url}" userId="${jdbc.username}" password="${jdbc.password}">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 生成模型信息 实体 entity-->
+		<javaModelGenerator targetPackage="${mybatis.entity.package}"
+			targetProject="src">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- 生成sqlMapper XML文件 -->
+		<sqlMapGenerator targetPackage="${mybatis.sqlmapper.package}"
+			targetProject="src">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		
+		<!-- 生成应用接口 mapper接口-->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="${mybatis.mapper.package}" targetProject="src">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<table tableName="${mybatis.table.name}" domainObjectName="${mybatis.entity.name}"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			
+			<!-- 去除一列，这样 PASSWORD这列就不会生成
+			 <ignoreColumn column="PASSWORD"/> 
+			-->
+			<!-- columnOverride 将数据库字段对应成javabean里面的字段 
+			<columnOverride column="USERID" property="userid" /> 
+			-->
+		</table>
+	</context>
+	<!-- java -jar mybatis-generator-core-1.3.1.jar -configfile generatorConfig.xml -overwrite -->
+</generatorConfiguration>  
