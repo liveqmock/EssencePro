@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CONFIG>          <!-- 配置文件 -->
+	<TABLENAME>chongqing_regno</TABLENAME>           <!-- 对应的表名 -->
+	<Request>
+	     <url>http://gsxt.cqgs.gov.cn/search_ent</url>
+         <method>get</method>     <!--get或post  -->
+	     <setHeader>  <!--设置请求头 -->
+	         <needHeader>true</needHeader><!--是否需要设置请求头。true为需要。false为不需要。如果设置为false,后面的headers即时配置也无效  -->
+	             <headers><!--设置header  -->
+	                 <header>
+	                    <key>Accept</key>
+	                    <value>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</value>
+	                 </header>
+	                 <header>
+	                    <key>Content-Type</key>
+	                    <value>application/x-www-form-urlencoded</value>
+	                 </header>
+	             </headers>
+	     </setHeader>
+	     <params>
+	        <param>
+	            <name>type</name>        
+	            <value>3200</value>
+            </param>
+            <param>
+                <name>id</name>        
+                <value>liao.getId</value> 
+            </param>
+	     </params>
+	</Request>
+</CONFIG>

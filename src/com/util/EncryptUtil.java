@@ -11,11 +11,15 @@
  */
 package com.util;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
@@ -62,6 +66,7 @@ public class EncryptUtil {
      *            要编码的字符串
      * @return 返回值
      */
+    @SuppressWarnings("deprecation")
     public static String getSHACode(String parStr) {
         return DigestUtils.shaHex(parStr);
     }
@@ -73,6 +78,7 @@ public class EncryptUtil {
      *            字节数组
      * @return 返回值
      */
+    @SuppressWarnings("deprecation")
     public static String getSHACode(byte[] parByteArray) {
         return DigestUtils.shaHex(parByteArray);
     }
@@ -153,5 +159,59 @@ public class EncryptUtil {
 
     public static void main(String[] args) {
         System.out.println(base64Encode("重庆金创商务有限公司"));
+    }
+
+    /**
+     * 转换url地址为utf-8格式
+     * 
+     * @Title encodeURL
+     * @author 吕凯
+     * @date 2013-7-29 上午11:37:44
+     * @param path
+     * @return String
+     */
+    public static String encodeURL(String path) {
+        StringBuffer flag = new StringBuffer("");
+        if (path == null || path.isEmpty()) {
+            return flag.toString();
+        }
+        String vali = " +()";
+        char[] valiarr = vali.toCharArray();
+        try {
+            char[] ch = path.toCharArray();
+
+            outer: for (int i = 0; i < ch.length; i++) {
+                if (StringUtil.isSingleByte(ch[i])) {
+                    for (int j = 0; j < valiarr.length; j++) {
+                        if (ch[i] == valiarr[j]) {
+                            if (ch[i] == ' ') {
+                                flag.append("%20");
+                            } else {
+                                flag.append(URLEncoder.encode(String.valueOf(ch[i]), "UTF-8"));
+                            }
+                            continue outer;
+                        }
+                    }
+                    flag.append(ch[i]);
+                } else {
+                    flag.append(URLEncoder.encode(String.valueOf(ch[i]), "UTF-8"));
+                }
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            log.error("不支持的字符集 UTF-8", e);
+        }
+        return flag.toString();
+    }
+
+    public static String base64EncodeURL(String urls) throws IOException {
+        URL url = new URL(encodeURL(urls));
+        BufferedInputStream bis = new BufferedInputStream(url.openStream());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int b = 0;
+        while ((b = bis.read()) != -1) {
+            baos.write(b);
+        }
+        return Base64.encodeBase64String(baos.toByteArray());
     }
 }
