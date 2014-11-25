@@ -365,4 +365,54 @@ public class ImgUtil {
         return false;
     }
 
+    public static BufferedImage rotateImage(File imageFile, int degree) {
+        try {
+            BufferedImage image = read(imageFile);
+            int iw = image.getWidth();// 原始图象的宽度
+            int ih = image.getHeight();// 原始图象的高度
+            int w = 0;
+            int h = 0;
+            int x = 0;
+            int y = 0;
+            degree = degree % 360;
+            if (degree < 0)
+                degree = 360 + degree;// 将角度转换到0-360度之间
+            double ang = Math.toRadians(degree);// 将角度转为弧度
+
+            /**
+             * 确定旋转后的图象的高度和宽度
+             */
+
+            if (degree == 180 || degree == 0 || degree == 360) {
+                w = iw;
+                h = ih;
+            } else if (degree == 90 || degree == 270) {
+                w = ih;
+                h = iw;
+            } else {
+                double cosVal = Math.abs(Math.cos(ang));
+                double sinVal = Math.abs(Math.sin(ang));
+                w = (int) (sinVal * ih) + (int) (cosVal * iw);
+                h = (int) (sinVal * iw) + (int) (cosVal * ih);
+            }
+
+            x = (w / 2) - (iw / 2);// 确定原点坐标
+            y = (h / 2) - (ih / 2);
+            BufferedImage rotatedImage = new BufferedImage(w, h, image.getType());
+            Graphics2D gs = (Graphics2D) rotatedImage.getGraphics();
+
+            AffineTransform at = new AffineTransform();
+            at.rotate(ang, w / 2, h / 2);// 旋转图象
+            at.translate(x, y);
+            gs.setTransform(at);
+            gs.drawImage(image, null, null);
+
+            // ImageIO.write(rotatedImage, "JPEG", imageFile);
+            return rotatedImage;
+        } catch (IOException e) {
+            log.error("图片旋转失败", e);
+        }
+        return null;
+    }
+
 }
