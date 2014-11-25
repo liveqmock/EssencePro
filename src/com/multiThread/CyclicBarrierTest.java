@@ -12,11 +12,11 @@ public class CyclicBarrierTest {
     public static void main(String[] args) {
         ExecutorService threadPool = Executors.newCachedThreadPool();
         // 创建一个计数器为3的CyclicBarrier对象
-        final CyclicBarrier cb = new CyclicBarrier(3);
+        final CyclicBarrier cb = new CyclicBarrier(10);
 
         System.out.println("========开始测试========");
         // 将三个任务添加到线程池中
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             Runnable temp = new Runnable() {
                 @Override
                 public void run() {
@@ -24,19 +24,19 @@ public class CyclicBarrierTest {
                         // cb.getNumberWaiting() 当前等待的线程数
                         Thread.sleep((long) (Math.random() * 10000));
                         System.out.println("即将到达集合地点1，线程：" + Thread.currentThread().getName() + "已经进入。当前有" + (cb.getNumberWaiting() + 1)
-                                + "个线程处于等候状态。" + ((cb.getNumberWaiting() == 2) ? "到齐啦 我们继续向前执行..." : ""));
+                                + "个线程处于等候状态。" + ((cb.getNumberWaiting() == 9) ? "到齐啦 我们继续向前执行..." : ""));
 
                         // 在未达到计数前 处于等待状态 一旦达到计数 则唤醒所有等待中的线程 继续向下执行
                         cb.await();
 
                         Thread.sleep((long) (Math.random() * 10000));
                         System.out.println("即将到达集合地点2，线程：" + Thread.currentThread().getName() + "已经进入。当前有" + (cb.getNumberWaiting() + 1)
-                                + "个线程处于等候状态。" + ((cb.getNumberWaiting() == 2) ? "到齐啦 我们继续向前执行..." : ""));
+                                + "个线程处于等候状态。" + ((cb.getNumberWaiting() == 9) ? "到齐啦 我们继续向前执行..." : ""));
                         cb.await();
 
                         Thread.sleep((long) (Math.random() * 10000));
                         System.out.println("即将到达集合地点3，线程：" + Thread.currentThread().getName() + "已经进入。当前有" + (cb.getNumberWaiting() + 1)
-                                + "个线程处于等候状态。" + ((cb.getNumberWaiting() == 2) ? "到齐啦 我们继续向前执行..." : ""));
+                                + "个线程处于等候状态。" + ((cb.getNumberWaiting() == 9) ? "到齐啦 我们继续向前执行..." : ""));
                         cb.await();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
