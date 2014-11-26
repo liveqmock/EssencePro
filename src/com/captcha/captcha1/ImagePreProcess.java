@@ -1,4 +1,4 @@
-package com.captcha;
+package com.captcha.captcha1;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -18,6 +18,12 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 
+/**
+ * 字体固定。大小固定。位置固定验证码。
+ * 
+ * @author Administrator
+ * 
+ */
 public class ImagePreProcess {
     // 验证码识别基本分为四步。图片预处理，分割，训练，识别
 
