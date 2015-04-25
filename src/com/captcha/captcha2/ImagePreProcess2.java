@@ -39,13 +39,6 @@ public class ImagePreProcess2 {
         return 0;
     }
 
-    /**
-     * 因为验证码无干扰线。所以此处不需要处理。
-     * 
-     * @param picFile
-     * @return
-     * @throws Exception
-     */
     public static BufferedImage removeBackgroud(String picFile) throws Exception {
         BufferedImage img = ImageIO.read(new File(picFile));
         return img;

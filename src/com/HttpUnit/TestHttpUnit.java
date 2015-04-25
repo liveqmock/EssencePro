@@ -37,7 +37,7 @@ public class TestHttpUnit {
         wc.getOptions().setThrowExceptionOnScriptError(false); // js运行错误时，是否抛出异常
         wc.getOptions().setTimeout(100000); // 设置连接超时时间 ，这里是10S。如果为0，则无限期等待
         wc.getOptions().setDoNotTrackEnabled(false);
-        HtmlPage page = wc.getPage("http://localhost:8080/test.html");
+        HtmlPage page = wc.getPage("http://www.1688.com/?spm=a260j.615.5095973.78");
 
         DomNodeList<DomElement> links = page.getElementsByTagName("a");
 

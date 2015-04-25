@@ -157,10 +157,6 @@ public class EncryptUtil {
         return null;
     }
 
-    public static void main(String[] args) {
-        System.out.println(base64Encode("重庆金创商务有限公司"));
-    }
-
     /**
      * 转换url地址为utf-8格式
      * 
@@ -213,5 +209,9 @@ public class EncryptUtil {
             baos.write(b);
         }
         return Base64.encodeBase64String(baos.toByteArray());
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println(base64Decode("538F3457F0A76892B689FF67740A60B76974D31"));
     }
 }
